@@ -1903,3 +1903,31 @@ body.light .navbar.scrolled {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+
+/* ================= WEB3FORMS MESSAGE STATUS ================= */
+.form-result {
+  min-height: 22px;
+  margin-top: 4px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-shadow: 0 0 8px #000;
+}
+
+.form-result.sending {
+  color: var(--green);
+}
+
+.form-result.success {
+  color: var(--green);
+}
+
+.form-result.error {
+  color: #ff5f57;
+}
+
+.message-card button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
