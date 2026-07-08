@@ -206,3 +206,57 @@ window.addEventListener("load", () => {
 });
 scrollEffects();
 startTerminal();
+
+
+// Web3Forms quick message form
+const contactForm = document.getElementById("contactForm");
+const formResult = document.getElementById("formResult");
+
+if (contactForm && formResult) {
+  contactForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const accessKey = contactForm.querySelector('input[name="access_key"]')?.value.trim();
+    if (!accessKey || accessKey === "YOUR_WEB3FORMS_ACCESS_KEY") {
+      formResult.textContent = "⚠️ Add your Web3Forms access key in contact.html first.";
+      formResult.className = "form-result error";
+      return;
+    }
+
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton ? submitButton.innerHTML : "";
+
+    formResult.textContent = "Sending message...";
+    formResult.className = "form-result sending";
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.innerHTML = "Sending <span>...</span>";
+    }
+
+    try {
+      const formData = new FormData(contactForm);
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        formResult.textContent = "✅ ACCESS GRANTED — Message sent successfully!";
+        formResult.className = "form-result success";
+        contactForm.reset();
+      } else {
+        formResult.textContent = data.message || "❌ Message failed. Please try again.";
+        formResult.className = "form-result error";
+      }
+    } catch (error) {
+      formResult.textContent = "❌ Network error. Please check your internet and try again.";
+      formResult.className = "form-result error";
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
+      }
+    }
+  });
+}
